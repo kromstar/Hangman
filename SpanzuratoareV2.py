@@ -5,15 +5,15 @@ id_student = "Farte Catalin"
 inputFile = codecs.open("cuvinte_de_verificat", "r", "utf-8")
 outputFile = codecs.open("date_iesire_timestamp", "w", "utf-8")
 
-litere = "AĂÂBCDEFGHIÎJKLMNOPQRSȘTȚUVWXYZ"
+litere = "IERALTONCUMĂSPDȚGBZFȘVHÂÎJXKYWQ"
 
 
-def read_games():
+def read_games(): # THE NAME OF THE METHOD IS OBVIOUSLY
     games = []
-    for lines in inputFile.readlines():  # CITIRE LINIE CU LINIE DIN FISIERUL cuvinte_de_verificat
+    for lines in inputFile.readlines():  
         list = []
-        for game in lines.split(";"):  # SPLIT LA ;
-            list.append(game.replace("\r\n", ""))  # APPEND LA LISTA FARA NEWLINE. ex: [[1001],[S**D**T],[STUDENT]]
+        for game in lines.split(";"):  
+            list.append(game.replace("\r\n", ""))  # APPEND TO THE LIST WITHOUT NEWLINE. ex: [[1001],[S**D**T],[STUDENT]]
         games.append(list)  # GAME INSTANCES
     return games
 
@@ -21,8 +21,8 @@ def read_games():
 def unde_se_potriveste_litera(id_student, idJoc, wordToCheck, char):
     positions = []
     for i in range(0, len(wordToCheck)):
-        if char == wordToCheck[i]:  # DACA LITERA ESTE LA FEL CU LITERA DE PE POZITIA I,
-            positions.append(i)  # ATUNCI POZITIA SE RETINE
+        if char == wordToCheck[i]:  # IF CHAR EQUALS THE CHAR ON POSITION i FROM THE COMPLETE WORD
+            positions.append(i)  # THEN THE POSITION IS REMEMBERED
     return positions
 
 
@@ -38,24 +38,24 @@ def main():
     for game in games:
         totalGames += 1
         tries = 0
-        idJoc = game[0]
+        idJoc = game[0] # 
         wordToGuess = []
         wordToCheck = []
-        for caracter in game[1]:  # IN CONTINUARE CUVANTUL CU * V-A FI INTRODUS INTR-O LISTA,
-            wordToGuess.append(caracter)  # CARACTER CU CARACTER
-        for caracter in game[2]:  # LA FEL SI PENTRU,
-            wordToCheck.append(caracter)  # CUVANTUL DE VERIFICARE
-        while not verificaCuvantul(id_student, idJoc, wordToGuess, wordToCheck):  # CAT TIMP CUVANTUL MAI ARE *
+        for caracter in game[1]:  
+            wordToGuess.append(caracter)  # THE WORD WITH * IS ADDED TO LIST wordToGuess
+        for caracter in game[2]:  
+            wordToCheck.append(caracter)  # --||-- FOR THE COMPLETE WORD
+        while not verificaCuvantul(id_student, idJoc, wordToGuess, wordToCheck):  # WHILE wordToGuess STILL HAS *
             for char in litere:
-                if verificaCuvantul(id_student, idJoc, wordToGuess, wordToCheck):  # O EXCEPTIE PENTRU A,
-                    break  # REDUCE NUMARUL DE INCERCARI INUTILE
+                if verificaCuvantul(id_student, idJoc, wordToGuess, wordToCheck):  # EXCEPTION MADE TO REDUCE THE NUMBER OF TRIES
+                    break  # THE PROGRAM GOES FOR ONE MORE TRY AFTER GUESSING THE WORD. USING THIS 'if' STOPS THE PROGRAM DOING THAT
                 tries += 1
                 positions = unde_se_potriveste_litera(id_student, idJoc, wordToCheck, char)
-                for pozitie in positions:  # PENTRU FIECARE POZITIE CE CONTINE *, * SE INLOCUIESTE,
-                    wordToGuess[pozitie] = char  # CU LITERA CURENTA
+                for pozitie in positions:  # FOR EVERY POSITION THAT CONTAINS *
+                    wordToGuess[pozitie] = char  # * IS REPLACED WITH THE CURRENT CHAR(LETTER)
                     ## For testing print(wordToGuess)
-        results2 = [idJoc, tries]  # PENTRU AFISARE ULTERIOARA IN CAZ PARTICULAR LA FIECARE JOC
-        results.append(results2)
+        results2 = [idJoc, tries]  # RESULTS2 IS A LIST CONTAINING THE GAME ID AND THE NUMBER OF TRIES FOR EACH GAME(USED TO MAKE THE PRINTS IN THE END)
+        results.append(results2)  # RESULTS IS A LIST CONTAINING THE ITEMS OF RESULTS 2. EX: [1001,23],[1002,24]...
         totalTries += tries
         outputFile.write(idJoc + ";" + str(tries) + " incercari\n")
     print("Numarul total de jocuri este ", totalGames)
